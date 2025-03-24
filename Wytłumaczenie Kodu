@@ -1,0 +1,39 @@
+Klasa Produkt: Ta klasa reprezentuje produkt przechowywany w magazynie. Ma trzy właściwości:
+
+Nazwa - nazwa produktu (typ string).
+
+Ilosc - ilość dostępnych sztuk (typ int).
+
+CenaJednostkowa - cena jednej sztuki produktu (typ double).
+
+Dzięki tej klasie można przechowywać dane o produktach w jednym miejscu.
+
+Lista magazyn: Jest to lista (List<Produkt>) używana do przechowywania wszystkich produktów. Każdy dodany produkt trafia do tej listy.
+
+Pętla główna w metodzie Main: Program działa w nieskończonej pętli while (true) i wyświetla użytkownikowi menu główne z dostępnymi opcjami. Użytkownik wybiera jedną z opcji, a program wykonuje odpowiednią akcję:
+
+1: Dodanie produktu.
+
+2: Usunięcie produktu.
+
+3: Wyświetlenie listy produktów.
+
+4: Aktualizacja produktu.
+
+5: Obliczenie wartości magazynu.
+
+6: Wyjście z programu.
+
+Jeśli użytkownik wybierze opcję 6, program przerywa działanie dzięki instrukcji return.
+
+Dodawanie produktu (DodajProdukt): Użytkownik wprowadza nazwę, ilość i cenę produktu. Dane są konwertowane na odpowiednie typy za pomocą Convert.ToInt32 i Convert.ToDouble. Następnie nowy obiekt Produkt jest dodawany do listy magazyn.
+
+Usuwanie produktu (UsunProdukt): Program wyszukuje w liście magazyn produkt o podanej nazwie za pomocą metody Find. Jeśli produkt zostanie znaleziony, jest usuwany z listy. Jeśli nie, wyświetlana jest odpowiednia informacja.
+
+Wyświetlanie produktów (WyswietlListeProduktow): Program iteruje po wszystkich produktach w magazynie za pomocą pętli foreach i wyświetla ich szczegóły: nazwę, ilość i cenę jednostkową.
+
+Aktualizacja produktu (AktualizujProdukt): Program pozwala użytkownikowi zmodyfikować istniejący produkt. Najpierw szuka produktu po nazwie, a potem umożliwia zaktualizowanie ilości, ceny lub obu tych parametrów.
+
+Obliczanie wartości magazynu (ObliczWartoscMagazynu): Program oblicza łączną wartość magazynu, sumując wartości każdego produktu (ilość * cena jednostkowa). Na końcu wyświetla całkowitą wartość.
+
+Obsługa błędów i warunki: Program sprawdza, czy wprowadzona nazwa istnieje w magazynie, zanim podejmie odpowiednie działanie (np. usuwanie lub aktualizacja). Dzięki temu unikamy błędów.

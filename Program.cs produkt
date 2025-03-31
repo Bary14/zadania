@@ -1,0 +1,73 @@
+
+using ShopCsharpG;
+
+
+
+List<Product> storage = new List<Product>();
+
+Console.WriteLine("Podaj nazwę produktu: ");
+string name = Console.ReadLine();
+Console.WriteLine("Podaj kod kreskowy produktu: ");
+string barCode = Console.ReadLine();
+Console.WriteLine("Podaj cenę produktu: ");
+double price = Convert.ToDouble(Console.ReadLine());
+Console.WriteLine("Podaj ilość produktu: ");
+float amount = Convert.ToSingle(Console.ReadLine());
+Product newProduct = new Product(barCode, name, price, amount);
+storage.Add(newProduct);
+
+
+Product p = new Product("1234567890",
+                        "Mleko",
+                        2.5,
+                        20);
+
+storage.Add(p);
+
+
+p = new Product("0987654321",
+                "Chleb",
+                2.0,
+                10);
+
+storage.Add(p);
+
+string search = "Mleko";
+
+Product foundProduct = storage.Find(p => p.Name == search);
+
+Product foundProduct2 = null;
+
+foreach (Product product in storage)
+{
+
+    if (product.Name == search)
+    {
+
+        foundProduct2 = product;
+
+        break;
+    }
+}
+
+storage.Remove(foundProduct);
+
+foundProduct2.Price = 3.0;
+
+
+foreach (Product product in storage)
+{
+    Console.WriteLine("Produkt o nazwie: " + product.Name +
+                      " o kodzie kreskowym: " + product.BarCode +
+                      " kosztuje: " + product.Price + "zł");
+}
+
+double totalValue = 0;
+
+foreach (Product product in storage)
+{
+
+    totalValue += product.Price * product.Amount;
+}
+
+Console.WriteLine("Wartość całego magazynu to: " + totalValue + "zł");

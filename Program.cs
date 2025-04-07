@@ -1,142 +1,127 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
-class Program
+// Lista produktów w magazynie
+List<Produkt> magazyn = new();
+
+// Główna pętla programu
+while (true)
 {
-    static void Main()
+    Console.WriteLine("Wybierz opcję:");
+    Console.WriteLine("1. Dodaj produkt");
+    Console.WriteLine("2. Usuń produkt");
+    Console.WriteLine("3. Wyświetl listę produktów");
+    Console.WriteLine("4. Aktualizuj produkt");
+    Console.WriteLine("5. Oblicz wartość magazynu");
+    Console.WriteLine("6. Wyjście");
+
+    string opcja = Console.ReadLine();
+
+    switch (opcja)
     {
-        List<Product> inventory = new List<Product>();
-        int choice;
-
-        do
-        {
-            Console.WriteLine("Wybierz opcję:");
-            Console.WriteLine("1. Dodaj produkt");
-            Console.WriteLine("2. Usuń produkt");
-            Console.WriteLine("3. Wyświetl listę produktów");
-            Console.WriteLine("4. Aktualizuj produkt");
-            Console.WriteLine("5. Oblicz wartość magazynu");
-            Console.WriteLine("6. Wyjście");
-            choice = Convert.ToInt32(Console.ReadLine());
-
-            switch (choice)
-            {
-                case 1:
-                    AddProduct(inventory);
-                    break;
-                case 2:
-                    RemoveProduct(inventory);
-                    break;
-                case 3:
-                    DisplayProducts(inventory);
-                    break;
-                case 4:
-                    UpdateProduct(inventory);
-                    break;
-                case 5:
-                    CalculateInventoryValue(inventory);
-                    break;
-                case 6:
-                    Console.WriteLine("Zakończono program.");
-                    break;
-                default:
-                    Console.WriteLine("Nieprawidłowa opcja.");
-                    break;
-            }
-        } while (choice != 6);
-    }
-
-    static void AddProduct(List<Product> inventory)
-    {
-        Console.WriteLine("Podaj nazwę produktu:");
-        string name = Console.ReadLine();
-        Console.WriteLine("Podaj ilość:");
-        int quantity = Convert.ToInt32(Console.ReadLine());
-        Console.WriteLine("Podaj cenę jednostkową:");
-        double unitPrice = Convert.ToDouble(Console.ReadLine());
-
-        inventory.Add(new Product(name, quantity, unitPrice));
-        Console.WriteLine("Produkt dodany!");
-    }
-
-    static void RemoveProduct(List<Product> inventory)
-    {
-        Console.WriteLine("Podaj nazwę produktu do usunięcia:");
-        string name = Console.ReadLine();
-        Product product = inventory.Find(p => p.Name == name);
-
-        if (product != null)
-        {
-            inventory.Remove(product);
-            Console.WriteLine("Produkt usunięty.");
-        }
-        else
-        {
-            Console.WriteLine("Nie znaleziono produktu.");
-        }
-    }
-
-    static void DisplayProducts(List<Product> inventory)
-    {
-        Console.WriteLine("Lista produktów:");
-        foreach (var product in inventory)
-        {
-            Console.WriteLine($"Nazwa: {product.Name}, Ilość: {product.Quantity}, Cena: {product.UnitPrice}");
-        }
-    }
-
-    static void UpdateProduct(List<Product> inventory)
-    {
-        Console.WriteLine("Podaj nazwę produktu do aktualizacji:");
-        string name = Console.ReadLine();
-        Product product = inventory.Find(p => p.Name == name);
-
-        if (product != null)
-        {
-            Console.WriteLine("Co chcesz zaktualizować? (1 - Ilość, 2 - Cena, 3 - Oba)");
-            int updateChoice = Convert.ToInt32(Console.ReadLine());
-
-            if (updateChoice == 1 || updateChoice == 3)
-            {
-                Console.WriteLine("Podaj nową ilość:");
-                product.Quantity = Convert.ToInt32(Console.ReadLine());
-            }
-
-            if (updateChoice == 2 || updateChoice == 3)
-            {
-                Console.WriteLine("Podaj nową cenę:");
-                product.UnitPrice = Convert.ToDouble(Console.ReadLine());
-            }
-
-            Console.WriteLine("Produkt zaktualizowany!");
-        }
-        else
-        {
-            Console.WriteLine("Nie znaleziono produktu.");
-        }
-    }
-
-    static void CalculateInventoryValue(List<Product> inventory)
-    {
-        double totalValue = 0;
-        foreach (var product in inventory)
-        {
-            totalValue += product.Quantity * product.UnitPrice;
-        }
-        Console.WriteLine($"Całkowita wartość magazynu: {totalValue}");
+        case "1": DodajProdukt(); break;
+        case "2": UsunProdukt(); break;
+        case "3": WyswietlListeProduktow(); break;
+        case "4": AktualizujProdukt(); break;
+        case "5": ObliczWartoscMagazynu(); break;
+        case "6": Console.WriteLine("Koniec programu."); return;
+        default: Console.WriteLine("Nieprawidłowa opcja. Spróbuj ponownie."); break;
     }
 }
 
-class Product
+// Funkcja dodawania produktu
+void DodajProdukt()
 {
-    public string Name { get; set; }
-    public int Quantity { get; set; }
-    public double UnitPrice { get; set; }
+    Console.Write("Podaj nazwę produktu: ");
+    string nazwa = Console.ReadLine();
+    Console.Write("Podaj ilość: ");
+    int ilosc = int.Parse(Console.ReadLine());
+    Console.Write("Podaj cenę jednostkową: ");
+    double cena = double.Parse(Console.ReadLine());
+    Console.Write("Podaj kod kreskowy ");
+    string kodKreskowy = Console.ReadLine();
 
-    public Product(string name, int quantity, double unitPrice)
+    if (kodKreskowy.ToUpper() == "AUTO")
     {
-        Name = name;
-        Quantity = quantity;
-        UnitPrice = unitPrice;
+        kodKreskowy = GenerujKodKreskowy(nazwa);
+    }
+
+    magazyn.Add(new Produkt(nazwa, ilosc, cena, kodKreskowy));
+    Console.WriteLine($"Produkt dodany pomyślnie Kod kreskowy:{kodKreskowy}");
+}
+
+// Funkcja usuwania produktu
+void UsunProdukt()
+{
+    Console.Write("Podaj nazwę produktu do usunięcia: ");
+    string nazwa = Console.ReadLine();
+
+    Produkt? produktDoUsuniecia = magazyn.Find(p => p.Nazwa == nazwa);
+    if (produktDoUsuniecia != null)
+    {
+        magazyn.Remove(produktDoUsuniecia);
+        Console.WriteLine("Produkt usunięty pomyślnie.");
+    }
+    else Console.WriteLine("Nie znaleziono produktu.");
+}
+
+// Funkcja wyświetlania listy produktów
+void WyswietlListeProduktow()
+{
+    Console.WriteLine("Lista produktów:");
+    foreach (var produkt in magazyn)
+    {
+        Console.WriteLine($"Nazwa: {produkt.Nazwa}, Ilość: {produkt.Ilosc}, Cena jednostkowa: {produkt.CenaJednostkowa}");
+        Console.WriteLine($"Kod kreskowy:\n{produkt.KodKreskowy}");
     }
 }
+
+// Funkcja aktualizacji produktu
+void AktualizujProdukt()
+{
+    Console.Write("Podaj nazwę produktu do aktualizacji: ");
+    string nazwa = Console.ReadLine();
+
+    Produkt? produktDoAktualizacji = magazyn.Find(p => p.Nazwa == nazwa);
+    if (produktDoAktualizacji != null)
+    {
+        Console.Write("Podaj nową ilość (lub ENTER, aby pominąć): ");
+        string nowaIlosc = Console.ReadLine();
+        if (!string.IsNullOrEmpty(nowaIlosc))
+            produktDoAktualizacji.Ilosc = int.Parse(nowaIlosc);
+
+        Console.Write("Podaj nową cenę jednostkową (lub ENTER, aby pominąć): ");
+        string nowaCena = Console.ReadLine();
+        if (!string.IsNullOrEmpty(nowaCena))
+            produktDoAktualizacji.CenaJednostkowa = double.Parse(nowaCena);
+
+        Console.WriteLine("Produkt zaktualizowany pomyślnie.");
+    }
+    else Console.WriteLine("Nie znaleziono produktu.");
+}
+
+// Funkcja obliczania wartości magazynu
+void ObliczWartoscMagazynu()
+{
+    double wartoscMagazynu = 0;
+    foreach (var produkt in magazyn)
+        wartoscMagazynu += produkt.Ilosc * produkt.CenaJednostkowa;
+
+    Console.WriteLine($"Całkowita wartość magazynu: {wartoscMagazynu}");
+}
+
+// Funkcja generowania prostego kodu kreskowego (pisemnego)
+string GenerujKodKreskowy(string tekst)
+{
+    return $"|{new string('|', tekst.Length)}|"; // Tworzenie prostego kodu kreskowego bazującego na długości nazwy
+}
+
+// Klasa Produkt definiująca strukturę danych
+class Produkt(string nazwa, int ilosc, double cenaJednostkowa, string kodKreskowy)
+{
+    public string Nazwa { get; set; } = nazwa;
+    public int Ilosc { get; set; } = ilosc;
+    public double CenaJednostkowa { get; set; } = cenaJednostkowa;
+    public string KodKreskowy { get; set; } = kodKreskowy;
+}
+
